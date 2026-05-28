@@ -1,12 +1,12 @@
-# Yakınsop: Ajan Tabanlı ve Kişiselleştirilmiş Ulusal Teleskop Bilim-Toplum Portalı
+# Yakınskop: Ajan Tabanlı ve Kişiselleştirilmiş Ulusal Teleskop Bilim-Toplum Portalı
 
-**Yakınsop**, Türkiye'deki ulusal teleskop altyapısının teknik verilerini toplumun her kesimine (7'den 77'ye) anlaşılır, kaliteli ve bilimsel doğruluktan ödün vermeden aktarmayı amaçlayan yapay zeka destekli bir interaktif dashboard projesidir.
+**Yakınskop**, Türkiye'deki ulusal teleskop altyapısının teknik verilerini toplumun her kesimine (7'den 77'ye) anlaşılır, kaliteli ve bilimsel doğruluktan ödün vermeden aktarmayı amaçlayan yapay zeka destekli bir interaktif dashboard projesidir.
 
 Proje, kuru ve soyut enstrümantasyon verilerini (okuma gürültüleri, piksel ölçekleri, dalga cephesi hataları vb.) kullanıcının yaş ve eğitim arka planına göre dinamik olarak hikayeleştiren bir **Context-Injection RAG (Retrieval-Augmented Generation)** mimarisine sahiptir.
 
-Yakınsop arayüzünden bir görünüm: Profil tabanlı uyarlanabilir anlatım ve teleskop karşılaştırma paneli.
+Yakınskop arayüzünden bir görünüm: Profil tabanlı uyarlanabilir anlatım ve teleskop karşılaştırma paneli.
 
-![Yakınsop Arayüz Görünümü](demo-foto/Ekran%20görüntüsü%202026-05-28%20110634.png)
+![Yakınskop Arayüz Görünümü](demo-foto/Ekran%20görüntüsü%202026-05-28%20110634.png)
 
 ---
 ## Kurulum
@@ -34,7 +34,7 @@ Yakınsop arayüzünden bir görünüm: Profil tabanlı uyarlanabilir anlatım v
 ## 📂 Proje Dizini Yapısı
 
 ```text
-Yakınsop/
+Yakınskop/
 ├── data/                   # Teleskop verilerinin temiz Markdown halleri
 │   ├── antalya/
 │   │   ├── rtt150.md       # RTT150 teleskop ve odak düzlem verileri
