@@ -88,6 +88,33 @@ def build_system_prompt(persona: str, context: str) -> str:
     return "\n\n".join(parts)
 
 
+COMPARE_SYSTEM = (
+    BASE_SYSTEM + "\n\n"
+    "Senden teleskopları karşılaştırman isteniyor. "
+    "KISA ve NET cevap ver. Gereksiz uzatma. "
+    "Kullanıcı belirli bir odak belirtmişse SADECE o konuya odaklan. "
+    "Belirtmemişse kısa bir özet tablo yap. "
+    "Maksimum 300 kelime ile yanıt ver."
+)
+
+
+def compare_telescopes(telescope_keys: list[str], persona: str, focus: str = "") -> str:
+    """Seçilen teleskopları karşılaştıran Gemini API çağrısı yapar."""
+    context = load_telescope_context(telescope_keys)
+    system = COMPARE_SYSTEM + "\n\n" + persona
+    if context.strip():
+        system += (
+            "\n\nAşağıda karşılaştırılacak teleskoplara ait teknik veriler bulunmaktadır:\n\n"
+            + context
+        )
+    names = ", ".join(telescope_keys)
+    if focus.strip():
+        user_msg = f"{names} teleskoplarını şu odakta karşılaştır: {focus}"
+    else:
+        user_msg = f"{names} teleskoplarını kısaca karşılaştır."
+    return chat([{"role": "user", "content": user_msg}], system)
+
+
 def chat(messages: list[dict], system_prompt: str) -> str:
     """Gemini API'ye mesaj geçmişini gönderip cevap alır."""
     contents = []
@@ -107,7 +134,7 @@ def chat(messages: list[dict], system_prompt: str) -> str:
                 config=genai.types.GenerateContentConfig(
                     system_instruction=system_prompt,
                     temperature=0.3,
-                    max_output_tokens=4096,
+                    max_output_tokens=16384,
                 ),
             )
             return response.text

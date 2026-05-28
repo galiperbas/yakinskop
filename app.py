@@ -4,12 +4,13 @@ from rag_engine import (
     load_telescope_context,
     resolve_persona,
     build_system_prompt,
+    compare_telescopes,
     chat,
 )
 
 # ---------- Sayfa Ayarları ----------
 st.set_page_config(
-    page_title="Yakınsop",
+    page_title="Yakınskop",
     page_icon="🔭",
     layout="wide",
 )
@@ -46,22 +47,12 @@ with st.sidebar:
     )
 
     st.divider()
-    st.header("Teleskop Seçimi")
-
-    selected_telescopes = st.multiselect(
-        "Sormak istediğiniz teleskopları seçin",
-        options=list(TELESCOPE_MAP.keys()),
-        default=list(TELESCOPE_MAP.keys()),
-    )
-
-    st.divider()
 
     profile_ready = age_group and education and background
-    if st.button("Profili Kaydet & Sohbete Başla", disabled=not profile_ready, use_container_width=True):
+    if st.button("Profili Kaydet", disabled=not profile_ready, use_container_width=True):
         st.session_state.age_group = age_group
         st.session_state.education = education
         st.session_state.background = background
-        st.session_state.selected_telescopes = selected_telescopes
         st.session_state.profile_set = True
         st.session_state.messages = []
         st.rerun()
@@ -78,33 +69,85 @@ st.title("🔭 Yakınskop")
 st.caption("Türkiye Ulusal Teleskop Altyapısı — Etkileşimli Bilim İletişimi Asistanı")
 
 if not st.session_state.profile_set:
-    st.info("Sohbete başlamak için lütfen soldaki panelden profil bilgilerinizi doldurun ve kaydedin.")
+    st.info("Başlamak için lütfen soldaki panelden profil bilgilerinizi doldurun ve kaydedin.")
     st.stop()
 
-# ---------- Sohbet Geçmişini Göster ----------
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
+# ---------- Navigasyon Tabları ----------
+tab_chat, tab_compare = st.tabs(["💬 Sohbet", "⚖️ Teleskop Karşılaştırma"])
 
-# ---------- Kullanıcı Girişi ----------
-if user_input := st.chat_input("Teleskoplar hakkında bir soru sorun..."):
-    st.session_state.messages.append({"role": "user", "content": user_input})
-    with st.chat_message("user"):
-        st.markdown(user_input)
+# ==================== TAB 1: SOHBET ====================
+with tab_chat:
+    st.subheader("Teleskop Sohbet Asistanı")
 
-    # Context ve system prompt oluştur
-    context = load_telescope_context(st.session_state.selected_telescopes)
-    persona = resolve_persona(
-        st.session_state.age_group,
-        st.session_state.education,
-        st.session_state.background,
+    # Teleskop seçimi (sohbet için)
+    chat_telescopes = st.multiselect(
+        "Sohbet için teleskop seçin",
+        options=list(TELESCOPE_MAP.keys()),
+        default=list(TELESCOPE_MAP.keys()),
+        key="chat_telescopes",
     )
-    system_prompt = build_system_prompt(persona, context)
 
-    # Gemini API çağrısı
-    with st.chat_message("assistant"):
-        with st.spinner("Düşünüyorum..."):
-            response = chat(st.session_state.messages, system_prompt)
-        st.markdown(response)
+    # Sohbet geçmişini göster
+    for msg in st.session_state.messages:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
 
-    st.session_state.messages.append({"role": "assistant", "content": response})
+    # Kullanıcı girişi
+    if user_input := st.chat_input("Teleskoplar hakkında bir soru sorun..."):
+        st.session_state.messages.append({"role": "user", "content": user_input})
+        with st.chat_message("user"):
+            st.markdown(user_input)
+
+        context = load_telescope_context(chat_telescopes)
+        persona = resolve_persona(
+            st.session_state.age_group,
+            st.session_state.education,
+            st.session_state.background,
+        )
+        system_prompt = build_system_prompt(persona, context)
+
+        with st.chat_message("assistant"):
+            with st.spinner("Düşünüyorum..."):
+                response = chat(st.session_state.messages, system_prompt)
+            st.markdown(response)
+
+        st.session_state.messages.append({"role": "assistant", "content": response})
+
+# ==================== TAB 2: KARŞILAŞTIRMA ====================
+with tab_compare:
+    st.subheader("Ekosistem Karşılaştırma Modülü")
+    st.markdown("İki veya daha fazla ulusal teleskobu seçerek teknik parametrelerini "
+                "birinci ilkeler fiziğiyle karşılaştırın.")
+
+    all_keys = list(TELESCOPE_MAP.keys())
+
+    col1, col2 = st.columns(2)
+    with col1:
+        tel_a = st.selectbox("Teleskop A", options=all_keys, index=0, key="cmp_a")
+    with col2:
+        remaining = [k for k in all_keys if k != tel_a]
+        tel_b = st.selectbox("Teleskop B", options=remaining, index=0, key="cmp_b")
+
+    extra = st.multiselect(
+        "Ek teleskop ekle (opsiyonel)",
+        options=[k for k in all_keys if k not in (tel_a, tel_b)],
+        key="cmp_extra",
+    )
+
+    compare_keys = [tel_a, tel_b] + extra
+
+    focus = st.text_input(
+        "Karşılaştırma odağı (opsiyonel)",
+        placeholder="Örn: CCD performansı, gözlem bandı farkları, ayna çapı etkisi...",
+        key="cmp_focus",
+    )
+
+    if st.button("Karşılaştır", use_container_width=True, type="primary"):
+        persona = resolve_persona(
+            st.session_state.age_group,
+            st.session_state.education,
+            st.session_state.background,
+        )
+        with st.spinner("Teleskoplar karşılaştırılıyor..."):
+            result = compare_telescopes(compare_keys, persona, focus)
+        st.markdown(result)
