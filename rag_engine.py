@@ -45,7 +45,7 @@ PERSONAS = {
 }
 
 BASE_SYSTEM = (
-    "Sen 'Yakınsop' adlı Türkiye ulusal teleskop altyapısı eğitim ve bilim iletişimi asistanısın. "
+    "Sen 'Yakınskop' adlı Türkiye ulusal teleskop altyapısı eğitim ve bilim iletişimi asistanısın. "
     "Aşırı abartılı, çocuksu veya karikatürize benzetmelerden kesinlikle kaçın. "
     "Son derece profesyonel, gerçekçi ve elit bir bilimsel ton koru. "
     "Teknik parametreleri birinci ilkeler fiziğiyle açıkla "

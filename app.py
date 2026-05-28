@@ -74,7 +74,7 @@ with st.sidebar:
             st.rerun()
 
 # ---------- Ana Alan ----------
-st.title("🔭 Yakınsop")
+st.title("🔭 Yakınskop")
 st.caption("Türkiye Ulusal Teleskop Altyapısı — Etkileşimli Bilim İletişimi Asistanı")
 
 if not st.session_state.profile_set:
