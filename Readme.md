@@ -5,7 +5,19 @@
 Proje, kuru ve soyut enstrümantasyon verilerini (okuma gürültüleri, piksel ölçekleri, dalga cephesi hataları vb.) kullanıcının yaş ve eğitim arka planına göre dinamik olarak hikayeleştiren bir **Context-Injection RAG (Retrieval-Augmented Generation)** mimarisine sahiptir.
 
 ---
+## Kurulum
 
+  Test etmek için adım adım, proje dizini local'e klonlandıktan sonra, proje yolunda çalıştırılması komutlar:
+
+  pip install -r requirements.txt
+
+  Ardından .env dosyasına gerçek API key'ini yaz (https://aistudio.google.com/ adresinden alınmaktadır.):
+  GEMINI_API_KEY="senin_gercek_api_keyin"
+  
+  Sonra çalıştır:
+  streamlit run app.py
+
+---
 ## 🚀 Öne Çıkan Özellikler
 
 * **Persona-Adaptive Mutation (Profil Tabanlı Uyarlanabilir Anlatım):** Kullanıcı onboarding ekranında yaşını ve eğitim durumunu seçer. Sistem prompt katmanı bu verilere göre anlık mutasyona uğrayarak; bir ilkokul öğrencisine yapısal ölçeklerle, bir mühendislik öğrencisine ise doğrudan temel fizik ilkeleriyle (First-Principles) açıklama yapar.
