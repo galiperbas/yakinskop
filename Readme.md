@@ -4,6 +4,10 @@
 
 Proje, kuru ve soyut enstrümantasyon verilerini (okuma gürültüleri, piksel ölçekleri, dalga cephesi hataları vb.) kullanıcının yaş ve eğitim arka planına göre dinamik olarak hikayeleştiren bir **Context-Injection RAG (Retrieval-Augmented Generation)** mimarisine sahiptir.
 
+Yakınsop arayüzünden bir görünüm: Profil tabanlı uyarlanabilir anlatım ve teleskop karşılaştırma paneli.
+
+![Yakınsop Arayüz Görünümü](demo-foto/Ekran%20görüntüsü%202026-05-28%20110634.png)
+
 ---
 ## Kurulum
 
