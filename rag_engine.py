@@ -1,7 +1,9 @@
 import os
+import time
 from pathlib import Path
 from dotenv import load_dotenv
 from google import genai
+from google.genai.errors import ServerError
 
 load_dotenv()
 
@@ -96,13 +98,21 @@ def chat(messages: list[dict], system_prompt: str) -> str:
             parts=[genai.types.Part.from_text(text=msg["content"])],
         ))
 
-    response = client.models.generate_content(
-        model=MODEL,
-        contents=contents,
-        config=genai.types.GenerateContentConfig(
-            system_instruction=system_prompt,
-            temperature=0.3,
-            max_output_tokens=4096,
-        ),
-    )
-    return response.text
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            response = client.models.generate_content(
+                model=MODEL,
+                contents=contents,
+                config=genai.types.GenerateContentConfig(
+                    system_instruction=system_prompt,
+                    temperature=0.3,
+                    max_output_tokens=4096,
+                ),
+            )
+            return response.text
+        except ServerError:
+            if attempt < max_retries - 1:
+                time.sleep(2 ** attempt)
+                continue
+            return "Gemini API şu anda yoğun talep nedeniyle yanıt veremiyor. Lütfen birkaç dakika sonra tekrar deneyin."
