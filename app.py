@@ -5,6 +5,7 @@ from rag_engine import (
     resolve_persona,
     build_system_prompt,
     compare_telescopes,
+    explain_term,
     chat,
 )
 
@@ -73,7 +74,7 @@ if not st.session_state.profile_set:
     st.stop()
 
 # ---------- Navigasyon Tabları ----------
-tab_chat, tab_compare = st.tabs(["💬 Sohbet", "⚖️ Teleskop Karşılaştırma"])
+tab_chat, tab_compare, tab_explain = st.tabs(["💬 Sohbet", "⚖️ Karşılaştırma", "🔬 Teknik Terim Açıklama"])
 
 # ==================== TAB 1: SOHBET ====================
 with tab_chat:
@@ -150,4 +151,34 @@ with tab_compare:
         )
         with st.spinner("Teleskoplar karşılaştırılıyor..."):
             result = compare_telescopes(compare_keys, persona, focus)
+        st.markdown(result)
+
+# ==================== TAB 3: TEKNİK TERİM AÇIKLAMA ====================
+with tab_explain:
+    st.subheader("Birinci İlkeler Teknik Açıklama")
+    st.markdown("Bir teknik astronomi/enstrümantasyon parametresi girin, "
+                "arkasındaki fiziksel mekanizmayı birinci ilkelerden öğrenin.")
+
+    term = st.text_input(
+        "Teknik terim veya parametre",
+        placeholder="Örn: Okuma Gürültüsü 6.9 e⁻ rms, Strehl Oranı %94, f/7.7, Kuantum Etkinliği...",
+        key="explain_term",
+    )
+
+    explain_telescope = st.selectbox(
+        "Bağlam teleskobu (opsiyonel — somut örnek için)",
+        options=["Genel"] + list(TELESCOPE_MAP.keys()),
+        index=0,
+        key="explain_tel",
+    )
+
+    if st.button("Açıkla", use_container_width=True, type="primary", disabled=not term):
+        persona = resolve_persona(
+            st.session_state.age_group,
+            st.session_state.education,
+            st.session_state.background,
+        )
+        tel_key = explain_telescope if explain_telescope != "Genel" else ""
+        with st.spinner("Fiziksel mekanizma açıklanıyor..."):
+            result = explain_term(term, persona, tel_key)
         st.markdown(result)

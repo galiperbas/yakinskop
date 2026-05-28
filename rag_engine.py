@@ -51,7 +51,9 @@ BASE_SYSTEM = (
     "Teknik parametreleri birinci ilkeler fiziğiyle açıkla "
     "(örn. bir CCD'nin neden karanlık akım/termal gürültüyle savaşmak için -60°C'ye soğutulması gerektiği). "
     "Uzamsal veya optik kapasiteleri net, ilişkilendirilebilir insan mühendisliği boyutlarıyla temelle. "
-    "Cevaplarını her zaman Türkçe ver."
+    "Cevaplarını her zaman Türkçe ver. "
+    "Cevabında teknik bir parametre geçtiğinde (ör. okuma gürültüsü, Strehl oranı, kuantum etkinliği, "
+    "kara akım, f oranı vb.) o parametrenin fiziksel mekanizmasını kısaca 1-2 cümleyle açıkla."
 )
 
 
@@ -112,6 +114,30 @@ def compare_telescopes(telescope_keys: list[str], persona: str, focus: str = "")
         user_msg = f"{names} teleskoplarını şu odakta karşılaştır: {focus}"
     else:
         user_msg = f"{names} teleskoplarını kısaca karşılaştır."
+    return chat([{"role": "user", "content": user_msg}], system)
+
+
+FIRSTPRINCIPLES_SYSTEM = (
+    BASE_SYSTEM + "\n\n"
+    "Kullanıcı sana bir teknik astronomi/enstrümantasyon parametresi veriyor. "
+    "Bu parametrenin arkasındaki FIZIKSEL MEKANIZMAYI birinci ilkelerden açıkla. "
+    "Yapı şu olsun:\n"
+    "1) **Ne?** — Parametrenin kısa tanımı (1-2 cümle)\n"
+    "2) **Neden Önemli?** — Bu değer neden teleskop performansını etkiler (2-3 cümle)\n"
+    "3) **Fiziksel Mekanizma** — Arkasındaki fizik (termodinamik, optik, kuantum etkinliği vb.)\n"
+    "4) **Somut Örnek** — Verilen teleskoptan veya gerçek bir gözlemden somut bir örnek\n"
+    "Maksimum 250 kelime. Cevaplarını Türkçe ver."
+)
+
+
+def explain_term(term: str, persona: str, telescope_key: str = "") -> str:
+    """Teknik bir terimi birinci ilkelerden açıklayan Gemini API çağrısı yapar."""
+    system = FIRSTPRINCIPLES_SYSTEM + "\n\n" + persona
+    if telescope_key:
+        context = load_telescope_context([telescope_key])
+        if context.strip():
+            system += "\n\nİlgili teleskop verisi:\n\n" + context
+    user_msg = f"Şu teknik parametreyi birinci ilkeler fiziğiyle açıkla: {term}"
     return chat([{"role": "user", "content": user_msg}], system)
 
 
