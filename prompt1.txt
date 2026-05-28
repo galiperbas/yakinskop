@@ -1,0 +1,33 @@
+Proje dizininde, 'mimari.json' dosyasında detayları bulunan "Yakınsop" projesinin Python (Streamlit + Google Gemini API) tabanlı kodlamasına başlayacağız. 
+
+Bu proje şu an aktif bir GitHub deposunda (Repository) açık kaynaklı bir proje olarak yer almaktadır. Sürüm kontrolünü ve temiz kod geçmişini korumak adına, SIKI BİR COMMIT TABANLI GELİŞTİRME iş akışı izleyeceğiz. 
+
+Geliştirme stratejisi olarak şu kararları aldık:
+1. Canlı web scraping yerine, 'data/' klasörü altındaki statik Markdown (.md) dosyalarından beslenen bir Context-Injection RAG mimarisi kullanacağız. Klasör yapımız şu şekildedir:
+   data/antalya/ (rtt150.md, tug100.md, tug060.md)
+   data/erzurum/ (ata050.md, dag400.md, dagtps.md)
+   Bu dosyaların içerikleri statik olarak elle veya harici olarak beslenecektir. Henüz .md dosyaları son haline gelmedi. şu linklerden ilgili dosyalar düzenlenmeli: 
+   (https://trgozlemevleri.gov.tr/teleskoplar/erzurum/dag400 
+   ve https://trgozlemevleri.gov.tr/teleskoplar/erzurum/ata050
+   ve https://trgozlemevleri.gov.tr/teleskoplar/erzurum/dagtps ve
+https://trgozlemevleri.gov.tr/teleskoplar/antalya/rtt150 ve
+https://trgozlemevleri.gov.tr/teleskoplar/antalya/tug100
+ve https://trgozlemevleri.gov.tr/teleskoplar/antalya/tug060)
+
+
+2. Vektör veri tabanı yükü oluşturmak yerine, ilgili teleskop verilerini doğrudan Gemini API promptuna dinamik context olarak ekleyeceğiz. Senden öncelikle P0 (Critical Path) gereksinimlerini yerine getirmeni bekliyorum:
+- FR-102: Kullanıcı profil bilgilerini (Yaş, Eğitim Durumu, Arka Plan Bilgisi) alan, şık bir Streamlit Onboarding/Profil Formu bileşeni oluştur. Bu verileri session_state içinde tut.
+- FR-103: Kullanıcının personasına göre (System Prompt Mutation tekniğiyle) cevap veren, 'data/' altındaki markdown dosyalarını akıllıca okuyan Gemini API entegreli Persona-Adaptive Chatbot motorunu (rag_engine.py ve app.py entegrasyonu) yaz.
+
+Bana kodları üretmeden önce:
+1. Proje klasör yapısını oluştur.
+2. Google Gemini API bağlantısı için güncel 'google-genai' SDK'sını kullanan temiz bir fonksiyonel yapı kur (.env dosyasından GEMINI_API_KEY okuyacak şekilde).
+3. 'data/' klasörü altındaki dosyaları nasıl yapılandırmam gerektiğine dair kısa bir şablon göster ve ardından Python kodlarını modüler olarak yazmaya başla.
+
+Karar verici benim (Human-in-the-loop). Kodları adım adım yaz, her adımdan sonra benden onay al ve API bağlantılarını test edebilmem için bana net direktifler ver.
+
+
+İŞ AKIŞI VE REHBERLİK KURALLARI:
+- Karar verici tamamen benim (Human-in-the-loop). 
+- Her bir mantıksal bileşeni veya kod bloğunu yazdıktan sonra DURACAKSIN ve benim kodu test edip GitHub'a commit atmam için bekleyeceksin. Benden onay almadan bir sonraki dosyaya veya adıma geçmeyeceksin.
+- Projeyi aşağıdaki birkaç Milestone (Kilometre Taşı) halinde parça parça inşa edeceğiz.

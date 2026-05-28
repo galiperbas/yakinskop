@@ -1,0 +1,3 @@
+streamlit>=xxx
+google-genai>=xxx
+python-dotenv>=xxx

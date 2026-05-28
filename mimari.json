@@ -1,0 +1,74 @@
+{
+  "instruction_to_llm": "You are an expert software architect and full-stack developer. Your task is to implement the 'Yakınsop' project exactly as specified in this configuration. Generate clean, modular Python code using Streamlit and the official modern 'google-genai' SDK.",
+  "project_metadata": {
+    "title": "Yakınsop: Agentic RAG-Driven National Telescope Outreach & Education Ecosystem",
+    "acronym": "Yakınsop",
+    "target_conference": "National Astronomy Congress (Ulusal Astronomi Kongresi - UAK)",
+    "year": 2026,
+    "frameworks_saved": ["Python 3.11+", "Streamlit", "google-genai", "python-dotenv"]
+  },
+  "project_abstract": {
+    "problem_statement": "Technical specifications of astronomical instruments (e.g., CCD chip types, read noise, Strehl ratios, wavefront errors) on national telescope websites remain abstract and hard to grasp for the general public, students, and educators, creating a massive barrier for effective science communication.",
+    "solution_concept": "A web-based interactive dashboard ('Yakınsop') serving as a high-quality abstraction layer over Turkey's national telescope infrastructure. It utilizes a static Context-Injection RAG pipeline powered by the Gemini API, dynamically shifting its explanation depth based on user profile states without requiring heavy Vector DB infrastructure.",
+    "tone_boundary": "Strictly avoid over-exaggerated, childish, or cartoonish analogies. Maintain a highly professional, realistic, and elite scientific tone. Focus on explaining technical parameters using first-principles physics (e.g., explaining why a CCD requires cooling to -60°C to combat dark current/thermal noise) and ground spatial or optical capacities in clear, relatable human engineering dimensions."
+  },
+  "directory_structure": {
+    "root": "Yakınsop/",
+    "data_layer": {
+      "base_dir": "data/",
+      "sub_dirs": {
+        "antalya": ["rtt150.md", "tug100.md", "tug060.md"],
+        "erzurum": ["ata050.md", "dag400.md", "dagtps.md"]
+      }
+    },
+    "code_layer": ["app.py", "rag_engine.py", "requirements.txt", ".env"]
+  },
+  "user_profile_system": {
+    "onboarding_fields": {
+      "age_group": ["7-12", "13-18", "19-25", "26+"],
+      "education_level": ["Primary/Middle School", "High School", "University Student/Graduate", "Educator/Researcher"],
+      "background_knowledge": ["Novice/Curious", "Space Enthusiast", "Technical/Engineering Background"]
+    },
+    "dynamic_prompt_mutation": {
+      "child_persona": "Act as an elite, inspiring science communicator. Do not use baby talk. Explain structural configurations using precise physical scaling (e.g., comparing a 4-meter mirror to a room size). Focus heavily on 'what' the telescope observes and the physical meaning of colors/filters.",
+      "general_public_persona": "Act as an expert observatory guide. Focus on the national and international engineering significance of the infrastructure. Translate abstract numerical parameters into logical operational performance metrics.",
+      "academic_student_persona": "Act as a senior astrophysics/engineering research peer. Retain precise academic terminology (e.g., spatial light modulators, quantum efficiency, wavefront errors, Strehl ratios). Focus on system integration, multi-wavelength trade-offs, and first-principles instrumentation logic."
+    }
+  },
+  "functional_requirements": {
+    "P0_critical_path": [
+      {
+        "id": "FR-101",
+        "feature": "Static Markdown Context Ingestion",
+        "description": "Read structured telescope parameter files from regional paths ('data/antalya/' and 'data/erzurum/') dynamically based on selected components, passing raw text context straight to the LLM prompt window."
+      },
+      {
+        "id": "FR-102",
+        "feature": "User Profile Form & State Management",
+        "description": "Implement a polished Streamlit sidebar or layout component to capture user demographic fields. Persist user attributes in 'st.session_state' across the session to feed custom system personas to the Gemini API."
+      },
+      {
+        "id": "FR-103",
+        "feature": "Persona-Adaptive RAG Chatbot Interface",
+        "description": "Develop a multi-turn chat UI in Streamlit ('st.chat_message') that queries the text files via Gemini API, instantly adjusting answer complexity and tone based on active profile states."
+      }
+    ],
+    "P1_high_priority": [
+      {
+        "id": "FR-201",
+        "feature": "Ecosystem Comparative Module",
+        "description": "Create a UI tab allowing users to cross-compare parameters between national telescopes (e.g., DAG400's NIR capabilities vs TUG100's optical setup) and benchmark them against global instruments (e.g., VLT or Keck) using first-principles reasoning."
+      },
+      {
+        "id": "FR-202",
+        "feature": "First-Principles Interactive Breakdown",
+        "description": "When technical specs like 'Okuma Gürültüsü: 6.9 e- rms' or 'Strehl Oranı: %94' are triggered in chat, the agent provides a standalone, high-fidelity physical explanation of the mechanism behind the metric."
+      }
+    ]
+  },
+  "technical_architecture_rules": {
+    "sdk_requirement": "Must use the modern 'google-genai' SDK via 'from google import genai' and initialize client via 'client = genai.Client()'. Do not use legacy google-generativeai.",
+    "model_selection": "Use 'gemini-2.5-flash' for quick chatbot reactions and profile-mutated explanations.",
+    "context_loading_logic": "Write an efficient parser in 'rag_engine.py' that maps the user's telescope selection to its specific local file path, loading only relevant technical text arrays to prevent token bloat."
+  }
+}
