@@ -1,10 +1,10 @@
-# Yakınskop: Ajan Tabanlı ve Kişiselleştirilmiş Ulusal Teleskop Bilim-Toplum Portalı
+# Yakınskop: Türkiye Ulusal Gözlemevleri Teleskoplarını Yakından Daha Detaylı Tanıtan Chatbot Arayüzü
 
-**Yakınskop**, Türkiye'deki ulusal teleskop altyapısının teknik verilerini toplumun her kesimine (7'den 77'ye) anlaşılır, kaliteli ve bilimsel doğruluktan ödün vermeden aktarmayı amaçlayan yapay zeka destekli bir interaktif dashboard projesidir.
+**Yakınskop**, Türkiye Ulusal Gözlemevleri sitesinde bulunan altı adet teleskopların teknik verilerini toplumun her kesimine (7'den 77'ye) anlaşılır, kaliteli ve bilimsel doğruluktan ödün vermeden aktarmayı amaçlayan yapay zeka destekli bir interaktif sohbet (chatbot) arayüz (dashboard) projesidir.
 
-Proje, kuru ve soyut enstrümantasyon verilerini (okuma gürültüleri, piksel ölçekleri, dalga cephesi hataları vb.) kullanıcının yaş ve eğitim arka planına göre dinamik olarak hikayeleştiren bir **Context-Injection RAG (Retrieval-Augmented Generation)** mimarisine sahiptir.
+Proje, teknik ve toplumun büyük bir bölümü için soyut olabilecek verileri (okuma gürültüleri, piksel ölçekleri, dalga cephesi hataları vb.) kullanıcının yaş ve eğitim gibi arka plan bilgisine göre dinamik olarak hikayeleştiren bir **Context-Injection RAG (Retrieval-Augmented Generation)** mimarisine sahiptir.
 
-Yakınskop arayüzünden bir görünüm: Profil tabanlı uyarlanabilir anlatım ve teleskop karşılaştırma paneli.
+Yakınskop arayüzünden bir görünüm:
 
 ![Yakınskop Arayüz Görünümü](demo-foto/Ekran%20görüntüsü%202026-05-28%20110634.png)
 
