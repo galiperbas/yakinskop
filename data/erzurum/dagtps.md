@@ -1,38 +1,43 @@
 # DAGTPS Teleskop Sistemi
 
-* **Konumu:** Erzurum DAG Yerleşkesi: Erzurum, Karakaya Tepesi (Doğu Anadolu Gözlemevi - DAG)
-* **Misyonu:** Atmosferik koşulların takibi ve analizi, gözlemevi yerleşke seçimi, teleskop optiğinin performans testleri amacıyla hizmet vermektedir. İki adet 30 cm çapında teleskoptan oluşan bir atmosferik görüş ölçüm sistemidir.
+* **Konumu:** Erzurum DAG Yerleşkesi: Erzurum, Karakaya Tepesi (Doğu Anadolu Gözlemevi - DAG, 3170 metre rakım)
+* **Misyonu:** DAGTPS Atmosferik Görüş Türbülans Profil Sistemi’dir ve 2 adet 30 cm çapında teleskoptan oluşur. Atmosferik koşulların takibi ve analizi, gözlemevi yerleşke seçimi, teleskop optiğinin performans testleri için önemlidir.
 * **Fotoğraf:** ![DAGTPS Teleskop Sistemi](dagtps.avif)
 * **Link:** https://trgozlemevleri.gov.tr/teleskoplar/erzurum/dagtps
 ---
 
-## Genel Özellikler:
+## Genel Özellikler
 
-- Kurgu Türü: Alt-Azimut (Alt-Az)
+- Kurgu Türü: Alt.-Az.
+- Ayna Çapı (m): 0,3
+- f Oranı: 10,0
+- Odak Uzunluk (m): 3,0
 - Optik Tasarım: Advanced Coma-Free
-- Ana Ayna Çapı: 0.3 m (300 mm)
-- f Oranı: f/10.0
-- Odak Uzunluğu: 3.0 m
-- Görüş Alanı (FoV): 5.4' x 3.7'
-- Gözlem Bandı: VIS (Görünür Bölge)
+- FoV Görüş Alanı: 5,4' x 3,7'
+- Gözlem λ**: VIS
+- Notlar:
+  - **λ: Gözlem dalga boyları | VIS: Visible / Görünür Bölge
 
 ---
 
-## Odak Düzlem Aygıtları:
+## Yöntemler
 
-### GDIMM Yöntemi - Kamera:
-- Model: Imaging Source DMK 33UX290
+Kullanılan maskeye ve elde edilen paramatrelere göre GDIMM ve MASS-DIMM yöntemleri mevcuttur.
+
+### GDIMM
+4 açıklığa sahip bir maskenin açıklıklarından birinin opsiyonel olarak kapalı olmasıyla uygulanan yöntemdir. Yöntemin temeli, tek bir dalga cephesinin iki farklı konumda elde edilen PSF’leriyle atmosferik görüşün hesaplanmasıdır.
+
+- Maske Dış Çapı: 34 cm
+- Maske Lens Açıklık Çapı: 10 cm
+- Maske Kapak Sayısı: 4 (Hepsi boş veya lensli olarak kullanılabilir)
+- Kamera: Imaging Source DMK 33UX290
 - Çip: STARVIS IMX290 CMOS
 - Piksel Sayısı: 1920 x 1080
 - Piksel Boyutu: 2.9 µm x 2.9 µm
-- Görüntü Hızı: 143 FPS (tam çözünürlükte)
-- Perde Türü: Rolling
+- Görüntü Sayısı: Tam Çözünürlükte; 143 FPS
+- Perde: Rolling
+- Boyut: Yükseklik: 29 mm, Genişlik: 29 mm, Uzunluk: 43 mm
 - Poz Süresi: 20 µs – 30 s
 
-### MASS-DIMM Sistemi:
-- Dört adet foto-katlandırıcı tüp ve hızlı kamera içerir.
-
-### GDIMM Maske Özellikleri:
-- Dış Çapı: 34 cm
-- Lens Açıklık Çapı: 10 cm
-- Kapak Sayısı: 4
+### MASS-DIMM
+MASS ve DIMM sistemlerinin odak düzleminde tek bir cihazda birleştirilerek, bu sayede teleskobun tam açıklığı kullanılarak, atmosferik türbülans ölçümü yapılmasını sağlayan sistemdir. MASS-DIMM cihazında DIMM kısmı için hızlı bir kamera, MASS kısmı için dört adet foto-katlandırıcı tüp bulunmaktadır.
