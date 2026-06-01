@@ -10,6 +10,19 @@ load_dotenv()
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 MODEL = "gemini-2.5-flash"
 
+# ── Token kullanım takibi ──
+_usage_stats = {
+    "total_input_tokens": 0,
+    "total_output_tokens": 0,
+    "total_tokens": 0,
+    "request_count": 0,
+}
+
+
+def get_usage_stats() -> dict:
+    """Kümülatif token kullanım istatistiklerini döndürür."""
+    return dict(_usage_stats)
+
 DATA_DIR = Path(__file__).parent / "data"
 
 TELESCOPE_MAP = {
@@ -100,7 +113,7 @@ COMPARE_SYSTEM = (
 )
 
 
-def compare_telescopes(telescope_keys: list[str], persona: str, focus: str = "") -> str:
+def compare_telescopes(telescope_keys: list[str], persona: str, focus: str = "") -> dict:
     """Seçilen teleskopları karşılaştıran Gemini API çağrısı yapar."""
     context = load_telescope_context(telescope_keys)
     system = COMPARE_SYSTEM + "\n\n" + persona
@@ -130,7 +143,7 @@ FIRSTPRINCIPLES_SYSTEM = (
 )
 
 
-def explain_term(term: str, persona: str, telescope_key: str = "") -> str:
+def explain_term(term: str, persona: str, telescope_key: str = "") -> dict:
     """Teknik bir terimi birinci ilkelerden açıklayan Gemini API çağrısı yapar."""
     system = FIRSTPRINCIPLES_SYSTEM + "\n\n" + persona
     if telescope_key:
@@ -141,8 +154,8 @@ def explain_term(term: str, persona: str, telescope_key: str = "") -> str:
     return chat([{"role": "user", "content": user_msg}], system)
 
 
-def chat(messages: list[dict], system_prompt: str) -> str:
-    """Gemini API'ye mesaj geçmişini gönderip cevap alır."""
+def chat(messages: list[dict], system_prompt: str) -> dict:
+    """Gemini API'ye mesaj geçmişini gönderip cevap ve token kullanım bilgisini döndürür."""
     contents = []
     for msg in messages:
         role = "user" if msg["role"] == "user" else "model"
@@ -163,9 +176,27 @@ def chat(messages: list[dict], system_prompt: str) -> str:
                     max_output_tokens=16384,
                 ),
             )
-            return response.text
+
+            # Token kullanım bilgilerini çıkar
+            usage = {"input": 0, "output": 0, "total": 0}
+            if hasattr(response, "usage_metadata") and response.usage_metadata:
+                meta = response.usage_metadata
+                usage["input"] = getattr(meta, "prompt_token_count", 0) or 0
+                usage["output"] = getattr(meta, "candidates_token_count", 0) or 0
+                usage["total"] = getattr(meta, "total_token_count", 0) or 0
+
+            # Kümülatif istatistikleri güncelle
+            _usage_stats["total_input_tokens"] += usage["input"]
+            _usage_stats["total_output_tokens"] += usage["output"]
+            _usage_stats["total_tokens"] += usage["total"]
+            _usage_stats["request_count"] += 1
+
+            return {"text": response.text, "usage": usage}
         except ServerError:
             if attempt < max_retries - 1:
                 time.sleep(2 ** attempt)
                 continue
-            return "Gemini API şu anda yoğun talep nedeniyle yanıt veremiyor. Lütfen birkaç dakika sonra tekrar deneyin."
+            return {
+                "text": "Gemini API şu anda yoğun talep nedeniyle yanıt veremiyor. Lütfen birkaç dakika sonra tekrar deneyin.",
+                "usage": {"input": 0, "output": 0, "total": 0},
+            }

@@ -20,6 +20,7 @@ from rag_engine import (
     compare_telescopes,
     explain_term,
     chat,
+    get_usage_stats,
 )
 
 app = Flask(__name__)
@@ -215,8 +216,8 @@ def api_chat():
     persona = resolve_persona(age_group, education, background)
     system_prompt = build_system_prompt(persona, context)
 
-    response = chat(messages, system_prompt)
-    return jsonify({"response": response})
+    result = chat(messages, system_prompt)
+    return jsonify({"response": result["text"], "usage": result["usage"]})
 
 
 # ── Karşılaştırma API ──
@@ -234,7 +235,7 @@ def api_compare():
 
     persona = resolve_persona(age_group, education, background)
     result = compare_telescopes(telescope_keys, persona, focus)
-    return jsonify({"response": result})
+    return jsonify({"response": result["text"], "usage": result["usage"]})
 
 
 # ── Terim Açıklama API ──
@@ -252,7 +253,13 @@ def api_explain():
 
     persona = resolve_persona(age_group, education, background)
     result = explain_term(term, persona, telescope_key)
-    return jsonify({"response": result})
+    return jsonify({"response": result["text"], "usage": result["usage"]})
+
+
+# ── Token Kullanım API ──
+@app.route("/api/usage")
+def api_usage():
+    return jsonify(get_usage_stats())
 
 
 if __name__ == "__main__":

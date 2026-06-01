@@ -17,6 +17,16 @@
         <span>Türkiye Ulusal Teleskop Altyapısı — Simülasyon Ortamı</span>
     </div>
     <div class="topbar-actions">
+        <div class="token-usage" id="token-usage" onclick="toggleTokenDetail()">
+            <span class="token-icon">⚡</span>
+            <span id="token-total">0</span> token
+        </div>
+        <div class="token-detail" id="token-detail">
+            <div class="token-row"><span>Giriş:</span><span id="td-input">0</span></div>
+            <div class="token-row"><span>Çıkış:</span><span id="td-output">0</span></div>
+            <div class="token-row"><span>Toplam:</span><span id="td-total">0</span></div>
+            <div class="token-row"><span>İstek:</span><span id="td-requests">0</span></div>
+        </div>
         <button class="topbar-btn" id="btn-compare" onclick="toggleCompareMode()">Karşılaştır</button>
         <button class="topbar-btn active" id="btn-chat-toggle" onclick="toggleChatPanel()">Chatbot</button>
     </div>

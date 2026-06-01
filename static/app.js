@@ -5,6 +5,28 @@ let currentTelescope = null;
 let chatMessages = [];
 let isLoading = false;
 
+// ── Token kullanım gösterimi ──
+function updateTokenUsage(usage) {
+    if (usage) {
+        // Anlık kullanımı göster (toplam kümülatif değeri /api/usage'dan alınır)
+        fetch('/api/usage')
+            .then(res => res.json())
+            .then(stats => {
+                document.getElementById('token-total').textContent = stats.total_tokens.toLocaleString('tr-TR');
+                document.getElementById('td-input').textContent = stats.total_input_tokens.toLocaleString('tr-TR');
+                document.getElementById('td-output').textContent = stats.total_output_tokens.toLocaleString('tr-TR');
+                document.getElementById('td-total').textContent = stats.total_tokens.toLocaleString('tr-TR');
+                document.getElementById('td-requests').textContent = stats.request_count.toLocaleString('tr-TR');
+            })
+            .catch(() => {});
+    }
+}
+
+function toggleTokenDetail() {
+    const detail = document.getElementById('token-detail');
+    detail.classList.toggle('visible');
+}
+
 // ── Profil helpers ──
 function getProfile() {
     return {
@@ -215,6 +237,7 @@ async function sendChat() {
         const response = data.response || data.error || 'Yanıt alınamadı.';
         chatMessages.push({ role: 'assistant', content: response });
         addChatMessage('bot', response);
+        updateTokenUsage(data.usage);
     } catch (e) {
         hideTyping();
         addChatMessage('bot', 'Bağlantı hatası. Lütfen tekrar deneyin.');
@@ -257,6 +280,7 @@ async function runCompare() {
         });
         const data = await res.json();
         result.innerHTML = marked.parse(data.response || data.error || 'Yanıt alınamadı.');
+        updateTokenUsage(data.usage);
     } catch (e) {
         result.innerHTML = '<div class="chat-msg system">Bağlantı hatası.</div>';
     }
@@ -287,6 +311,7 @@ async function runExplain() {
         });
         const data = await res.json();
         result.innerHTML = marked.parse(data.response || data.error || 'Yanıt alınamadı.');
+        updateTokenUsage(data.usage);
     } catch (e) {
         result.innerHTML = '<div class="chat-msg system">Bağlantı hatası.</div>';
     }

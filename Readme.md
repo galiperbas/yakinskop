@@ -1,55 +1,92 @@
-# Yakınskop: Türkiye Ulusal Gözlemevleri Teleskoplarını Yakından ve Daha Detaylı Tanıtan Chatbot Arayüzü
+# Yakınskop
 
-**Yakınskop**, Türkiye Ulusal Gözlemevleri sitesinde bulunan altı adet teleskop sayfasındaki teknik özellikleri ve bilgileri (https://trgozlemevleri.gov.tr/) toplumun her kesimine (7'den 77'ye) daha anlaşılır aktarmayı amaçlayan yapay zeka destekli bir interaktif sohbet (chatbot) arayüz (dashboard) projesidir.
+**Yakınskop: Türkiye Ulusal Gözlemevleri Teleskoplarını Yakından ve Daha Detaylı Tanıtan Chatbot Arayüzü**
 
-Proje, teknik ve toplumun büyük bir bölümü için soyut olabilecek verileri (okuma gürültüleri, piksel ölçekleri, dalga cephesi hataları vb.) kullanıcının yaş ve eğitim gibi arka plan bilgisine göre dinamik olarak hikayeleştiren bir **Context-Injection RAG (Retrieval-Augmented Generation)** mimarisine sahiptir.
-
-Yakınskop arayüzünden bir görünüm:
+[Türkiye Ulusal Gözlemevleri](https://trgozlemevleri.gov.tr/) sitesinde yer alan altı teleskop sayfasındaki teknik parametreleri (okuma gürültüsü, Strehl oranı, dalga cephesi hatası vb.) kullanıcının yaş ve eğitim profiline göre dinamik olarak açıklayan bir **Context-Injection RAG** (Retrieval-Augmented Generation) chatbot prototipidir.
 
 ![Yakınskop Arayüz Görünümü](demo-foto/Ekran%20görüntüsü%202026-05-28%20110634.png)
 
 ---
+
+## Özellikler
+
+| Özellik | Açıklama |
+|---|---|
+| **Profil Tabanlı Anlatım** | Kullanıcı yaşını ve eğitim düzeyini seçer; sistem üç kademe (çocuk, genel, akademik) arasında otomatik geçiş yapar. |
+| **Context-Injection RAG** | Teleskop teknik verilerini yapılandırılmış Markdown dosyalarından okuyarak Gemini API'nin geniş bağlam penceresine doğrudan enjekte eder. |
+| **Üç Etkileşim Modu** | Sohbet, teleskop karşılaştırma ve birinci ilkeler (first-principles) terim açıklama modülleri. |
+| **Token Kullanım Takibi** | Her API çağrısındaki giriş/çıkış token sayısı ve maliyet canlı olarak izlenebilir. |
+| **Metin Seçim Entegrasyonu** | Sayfadaki herhangi bir teknik terimi seçip tek tıkla chatbot'a sorabilme. |
+
+---
+
+## Teleskoplar
+
+| Yerleşke | Teleskop | Ayna Çapı |
+|---|---|---|
+| Erzurum — DAG | DAG400 | 4,0 m |
+| Erzurum — DAG | ATA050 | 0,5 m |
+| Erzurum — DAG | DAGTPS | 0,3 m |
+| Antalya — TUG | RTT150 | 1,5 m |
+| Antalya — TUG | TUG100 | 1,0 m |
+| Antalya — TUG | TUG060 | 0,6 m |
+
+Veri kaynağı: [trgozlemevleri.gov.tr/teleskoplar](https://trgozlemevleri.gov.tr/teleskoplar)
+
+---
+
 ## Kurulum
 
-  Test etmek için adım adım, proje dizini local'e klonlandıktan sonra, proje yolunda çalıştırılması komutlar:
+```bash
+git clone https://github.com/galiperbas/yakinskop.git
+cd yakinskop
+pip install -r requirements.txt
+```
 
-  pip install -r requirements.txt
+`.env` dosyasına [Google AI Studio](https://aistudio.google.com/) üzerinden alınan API anahtarını yazın:
 
-  Ardından .env dosyasına gerçek API key'ini yaz (https://aistudio.google.com/ adresinden alınmaktadır.):
-  GEMINI_API_KEY="senin_gercek_api_keyin"
-  
-  Sonra çalıştır:
-  python server.py
+```
+GEMINI_API_KEY=senin_api_anahtarin
+```
+
+Sunucuyu başlatın:
+
+```bash
+python server.py
+```
+
+Tarayıcıda `http://localhost:5000` adresine gidin.
 
 ---
-## 🚀 Öne Çıkan Özellikler
 
-* **Persona-Adaptive Mutation (Profil Tabanlı Uyarlanabilir Anlatım):** Kullanıcı onboarding ekranında yaşını ve eğitim durumunu seçer. Sistem prompt katmanı bu verilere göre anlık mutasyona uğrayarak; bir ilkokul öğrencisine yapısal ölçeklerle, bir mühendislik öğrencisine ise doğrudan temel fizik ilkeleriyle (First-Principles) açıklama yapar.
-* **Context-Injection RAG:** Büyük ve maliyetli Vector DB/Embedding süreçleri yerine, teleskopların tüm teknik speşlerini içeren statik Markdown dosyalarını Gemini API'nin geniş bağlam penceresine doğrudan "bağlam" olarak enjekte eder. %100 deterministik ve sapmasız (hallucination-free) çalışır.
-* **Elit ve Gerçekçi Dil Sınırı:** Anlatımlarda çocuksu, abartılı veya gerçek dışı analojiler kesinlikle kullanılmaz. Tüm açıklamalar akademik kalitede, popüler bilim çizgisine uygun ve fiziksel gerçekliklere dayalıdır.
-* **Ekosistem Karşılaştırma Modülü:** Ulusal teleskopların birbirleriyle olan teknik farklarını ve uluslararası gözlemevleri karşısındaki stratejik önemini yapısal olarak analiz eder.
+## Mimari
 
----
-
-## 📂 Proje Dizini Yapısı
-
-```text
+```
 Yakınskop/
-├── data/                   # Teleskop verileri (Markdown + görseller)
-│   ├── antalya/
-│   │   ├── rtt150.md/.avif # RTT150 teleskop ve odak düzlem verileri
-│   │   ├── tug100.md/.avif # TUG T100 teleskop verileri
-│   │   └── tug060.md/.avif # TUG T060 teleskop ve Andor iKon-L 936 kamera speşleri
-│   └── erzurum/
-│       ├── dag400.md/.avif # DAG400 teleskop, KORAY, DIRAC, TROIA, PLACID, DAGOS özellikleri
-│       ├── ata050.md/.avif # ATA050 robotik teleskop verileri
-│       └── dagtps.md/.avif # DAG TPS donanım verileri
-├── server.py               # Flask backend (API rotaları ve şablon sunucusu)
-├── rag_engine.py           # Gemini API (google-genai SDK) entegrasyonu ve Context-Injection RAG motoru
+├── data/                   # Teleskop verileri (Markdown)
+│   ├── antalya/            # RTT150, TUG100, TUG060
+│   └── erzurum/            # DAG400, ATA050, DAGTPS
+├── server.py               # Flask backend + API rotaları
+├── rag_engine.py           # Gemini API entegrasyonu ve Context-Injection RAG motoru
 ├── templates/
-│   └── index.html          # Ana arayüz şablonu (sidebar, içerik alanı, sohbet paneli)
+│   └── index.html          # Ana arayüz şablonu
 ├── static/
-│   ├── app.js              # Frontend JavaScript (API çağrıları, etkileşim mantığı)
+│   ├── app.js              # Frontend etkileşim mantığı
 │   └── style.css           # Arayüz stilleri
-├── .env                    # API anahtarı (GEMINI_API_KEY)
-└── requirements.txt        # Bağımlılıklar (flask, google-genai, python-dotenv)
+├── .env                    # API anahtarı (git'e dahil değil)
+└── requirements.txt        # Python bağımlılıkları
+```
+
+---
+
+## Teknolojiler
+
+- **Backend:** Python, Flask
+- **LLM:** Google Gemini 2.5 Flash (google-genai SDK)
+- **Frontend:** Vanilla HTML/CSS/JS, Marked.js (Markdown render)
+
+---
+
+## Lisans
+
+MIT

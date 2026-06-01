@@ -66,6 +66,64 @@ body {
 .topbar-btn:hover { background: rgba(255,255,255,0.25); }
 .topbar-btn.active { background: var(--accent); border-color: var(--accent); }
 
+/* ── Token Kullanım Göstergesi ── */
+.token-usage {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.9);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+    user-select: none;
+    position: relative;
+}
+.token-usage:hover { background: rgba(255,255,255,0.22); }
+.token-icon { font-size: 13px; }
+.token-detail {
+    display: none;
+    position: absolute;
+    top: calc(var(--topbar-h) - 4px);
+    right: 130px;
+    background: #1a237e;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 10px 14px;
+    min-width: 170px;
+    z-index: 200;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+}
+.token-detail.visible { display: block; }
+.token-detail::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 24px;
+    border: 6px solid transparent;
+    border-bottom-color: #1a237e;
+    border-top: none;
+}
+.token-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+    font-size: 12px;
+    color: rgba(255,255,255,0.85);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.token-row:last-child { border-bottom: none; }
+.token-row span:first-child {
+    font-weight: 600;
+    color: rgba(255,255,255,0.6);
+}
+.token-row span:last-child {
+    font-variant-numeric: tabular-nums;
+}
+
 /* ── Layout ── */
 .layout {
     display: flex;
