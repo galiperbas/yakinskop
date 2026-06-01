@@ -4,7 +4,10 @@
 
 [Türkiye Ulusal Gözlemevleri](https://trgozlemevleri.gov.tr/) sitesinde yer alan altı teleskop sayfasındaki teknik parametreleri (okuma gürültüsü, Strehl oranı, dalga cephesi hatası vb.) kullanıcının yaş ve eğitim profiline göre dinamik olarak açıklayan bir **Context-Injection RAG** (Retrieval-Augmented Generation) chatbot prototipidir.
 
+Örnek kullanım senaryosu olarak: Teleskop teknik özelliklerinin paylaşıldığı ilgili sayfada kullanıcı, merak ettiği teknik terimi seçer ve chatbota sorar. 
 ![Yakınskop Arayüz Görünümü](/use-case-1.png)
+
+Büyük Dil Modeli, yalnızca sayfadaki verilere sadık kalarak kullanıcının sorularına detaylı açıklama getirir.
 ![Yakınskop Arayüz Görünümü](/use-case-1-cevap.png)
 
 ---
