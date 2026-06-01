@@ -154,6 +154,20 @@ def explain_term(term: str, persona: str, telescope_key: str = "") -> dict:
     return chat([{"role": "user", "content": user_msg}], system)
 
 
+def _extract_text(response) -> str | None:
+    """Gemini yanıtından metin parçalarını güvenli şekilde çıkarır (thinking parçaları hariç)."""
+    if not response.candidates:
+        return None
+    candidate = response.candidates[0]
+    if not candidate.content or not candidate.content.parts:
+        return None
+    text_parts = []
+    for part in candidate.content.parts:
+        if hasattr(part, "text") and part.text and not getattr(part, "thought", False):
+            text_parts.append(part.text)
+    return "".join(text_parts) if text_parts else None
+
+
 def chat(messages: list[dict], system_prompt: str) -> dict:
     """Gemini API'ye mesaj geçmişini gönderip cevap ve token kullanım bilgisini döndürür."""
     contents = []
@@ -177,6 +191,25 @@ def chat(messages: list[dict], system_prompt: str) -> dict:
                 ),
             )
 
+            # Yanıt metnini güvenli şekilde çıkar
+            text = _extract_text(response)
+            if not text:
+                finish = None
+                if response.candidates:
+                    finish = getattr(response.candidates[0], "finish_reason", None)
+                if finish and str(finish) in ("SAFETY", "BLOCKED", "FinishReason.SAFETY", "FinishReason.BLOCKED"):
+                    return {
+                        "text": "Bu soru güvenlik filtreleri nedeniyle yanıtlanamadı. Lütfen farklı bir şekilde sormayı deneyin.",
+                        "usage": {"input": 0, "output": 0, "total": 0},
+                    }
+                if attempt < max_retries - 1:
+                    time.sleep(2 ** attempt)
+                    continue
+                return {
+                    "text": "Gemini API boş yanıt döndürdü. Lütfen tekrar deneyin.",
+                    "usage": {"input": 0, "output": 0, "total": 0},
+                }
+
             # Token kullanım bilgilerini çıkar
             usage = {"input": 0, "output": 0, "total": 0}
             if hasattr(response, "usage_metadata") and response.usage_metadata:
@@ -191,20 +224,31 @@ def chat(messages: list[dict], system_prompt: str) -> dict:
             _usage_stats["total_tokens"] += usage["total"]
             _usage_stats["request_count"] += 1
 
-            return {"text": response.text, "usage": usage}
-        except Exception as e:
-            error_str = str(e)
-            if attempt < max_retries - 1 and ("503" in error_str or "500" in error_str):
+            return {"text": text, "usage": usage}
+        except ServerError:
+            if attempt < max_retries - 1:
                 time.sleep(2 ** attempt)
                 continue
-            
-            error_msg = "Gemini API bağlantı hatası."
-            if "API key not valid" in error_str or "API_KEY_INVALID" in error_str:
-                error_msg = "API Anahtarı geçersiz. Lütfen .env dosyasındaki GEMINI_API_KEY değerini kontrol edin."
-            elif "quota" in error_str.lower() or "429" in error_str:
-                error_msg = "API kota sınırına ulaşıldı. Lütfen daha sonra tekrar deneyin."
-            
             return {
-                "text": error_msg,
+                "text": "Gemini API şu anda yanıt veremiyor. Lütfen birkaç dakika sonra tekrar deneyin.",
+                "usage": {"input": 0, "output": 0, "total": 0},
+            }
+        except Exception as e:
+            error_str = str(e)
+            if "API key not valid" in error_str or "API_KEY_INVALID" in error_str:
+                return {
+                    "text": "API Anahtarı geçersiz. Lütfen .env dosyasındaki GEMINI_API_KEY değerini kontrol edin.",
+                    "usage": {"input": 0, "output": 0, "total": 0},
+                }
+            if "quota" in error_str.lower() or "429" in error_str:
+                return {
+                    "text": "API kota sınırına ulaşıldı. Lütfen daha sonra tekrar deneyin.",
+                    "usage": {"input": 0, "output": 0, "total": 0},
+                }
+            if attempt < max_retries - 1:
+                time.sleep(2 ** attempt)
+                continue
+            return {
+                "text": f"Gemini API hatası: {error_str}",
                 "usage": {"input": 0, "output": 0, "total": 0},
             }
