@@ -192,11 +192,19 @@ def chat(messages: list[dict], system_prompt: str) -> dict:
             _usage_stats["request_count"] += 1
 
             return {"text": response.text, "usage": usage}
-        except ServerError:
-            if attempt < max_retries - 1:
+        except Exception as e:
+            error_str = str(e)
+            if attempt < max_retries - 1 and ("503" in error_str or "500" in error_str):
                 time.sleep(2 ** attempt)
                 continue
+            
+            error_msg = "Gemini API bağlantı hatası."
+            if "API key not valid" in error_str or "API_KEY_INVALID" in error_str:
+                error_msg = "API Anahtarı geçersiz. Lütfen .env dosyasındaki GEMINI_API_KEY değerini kontrol edin."
+            elif "quota" in error_str.lower() or "429" in error_str:
+                error_msg = "API kota sınırına ulaşıldı. Lütfen daha sonra tekrar deneyin."
+            
             return {
-                "text": "Gemini API şu anda yoğun talep nedeniyle yanıt veremiyor. Lütfen birkaç dakika sonra tekrar deneyin.",
+                "text": error_msg,
                 "usage": {"input": 0, "output": 0, "total": 0},
             }
