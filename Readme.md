@@ -19,7 +19,7 @@ Yakınskop arayüzünden bir görünüm:
   GEMINI_API_KEY="senin_gercek_api_keyin"
   
   Sonra çalıştır:
-  streamlit run app.py
+  python server.py
 
 ---
 ## 🚀 Öne Çıkan Özellikler
@@ -35,16 +35,21 @@ Yakınskop arayüzünden bir görünüm:
 
 ```text
 Yakınskop/
-├── data/                   # Teleskop verilerinin temiz Markdown halleri
+├── data/                   # Teleskop verileri (Markdown + görseller)
 │   ├── antalya/
-│   │   ├── rtt150.md       # RTT150 teleskop ve odak düzlem verileri
-│   │   ├── tug100.md       # TUG T100 teleskop verileri
-│   │   └── tug060.md       # TUG T060 teleskop ve Andor iKon-L 936 kamera speşleri
+│   │   ├── rtt150.md/.avif # RTT150 teleskop ve odak düzlem verileri
+│   │   ├── tug100.md/.avif # TUG T100 teleskop verileri
+│   │   └── tug060.md/.avif # TUG T060 teleskop ve Andor iKon-L 936 kamera speşleri
 │   └── erzurum/
-│       ├── ata050.md       # ATA050 robotik teleskop verileri
-│       ├── dag400.md       # DAG400 teleskop, KORAY, DIRAC, TROIA, PLACID, DAGOS özellikleri
-│       └── dagtps.md       # DAG TPS donanım verileri
-├── app.py                  # Streamlit UI (Profil ekranı, Karşılaştırma Paneli, Chat arayüzü)
-├── rag_engine.py           # Gemini API (google-genai SDK) entegrasyonu ve Context yükleyici logic
-├── mimari.json             # Projenin tüm fonksiyonel ve yapısal master konfigürasyonu
-└── requirements.txt        # Bağımlılıklar (streamlit, google-genai, python-dotenv)
+│       ├── dag400.md/.avif # DAG400 teleskop, KORAY, DIRAC, TROIA, PLACID, DAGOS özellikleri
+│       ├── ata050.md/.avif # ATA050 robotik teleskop verileri
+│       └── dagtps.md/.avif # DAG TPS donanım verileri
+├── server.py               # Flask backend (API rotaları ve şablon sunucusu)
+├── rag_engine.py           # Gemini API (google-genai SDK) entegrasyonu ve Context-Injection RAG motoru
+├── templates/
+│   └── index.html          # Ana arayüz şablonu (sidebar, içerik alanı, sohbet paneli)
+├── static/
+│   ├── app.js              # Frontend JavaScript (API çağrıları, etkileşim mantığı)
+│   └── style.css           # Arayüz stilleri
+├── .env                    # API anahtarı (GEMINI_API_KEY)
+└── requirements.txt        # Bağımlılıklar (flask, google-genai, python-dotenv)
