@@ -6,7 +6,8 @@
       "Bash(pip install:*)",
       "Bash(curl -s http://localhost:5000/)",
       "Bash(curl -s http://localhost:5000/api/telescope/dag400)",
-      "Bash(pkill -f \"python server.py\")"
+      "Bash(pkill -f \"python server.py\")",
+      "Bash(wc:*)"
     ]
   }
 }
