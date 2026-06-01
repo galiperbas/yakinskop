@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yakınskop — Türkiye Ulusal Teleskop Altyapısı</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- Marked.js for markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+
+<!-- ── Top Bar ── -->
+<div class="topbar">
+    <div class="topbar-logo">
+        Yakınskop
+        <span>Türkiye Ulusal Teleskop Altyapısı — Simülasyon Ortamı</span>
+    </div>
+    <div class="topbar-actions">
+        <button class="topbar-btn" id="btn-compare" onclick="toggleCompareMode()">Karsilastir</button>
+        <button class="topbar-btn active" id="btn-chat-toggle" onclick="toggleChatPanel()">Chatbot</button>
+    </div>
+</div>
+
+<!-- ── Layout ── -->
+<div class="layout">
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-group">
+            <div class="sidebar-group-title">Erzurum DAG Yerleskesi</div>
+            <div class="sidebar-item" data-slug="dag400" onclick="loadTelescope('dag400')">
+                <div class="sidebar-item-icon erzurum">4.0m</div>
+                <div class="sidebar-item-info">
+                    <h4>DAG400</h4>
+                    <p>Dogu Anadolu Gozlemevi</p>
+                </div>
+            </div>
+            <div class="sidebar-item" data-slug="ata050" onclick="loadTelescope('ata050')">
+                <div class="sidebar-item-icon erzurum">0.5m</div>
+                <div class="sidebar-item-info">
+                    <h4>ATA050</h4>
+                    <p>Robotik Teleskop</p>
+                </div>
+            </div>
+            <div class="sidebar-item" data-slug="dagtps" onclick="loadTelescope('dagtps')">
+                <div class="sidebar-item-icon erzurum">0.3m</div>
+                <div class="sidebar-item-info">
+                    <h4>DAGTPS</h4>
+                    <p>Turbulans Profil Sistemi</p>
+                </div>
+            </div>
+        </div>
+        <div class="sidebar-group">
+            <div class="sidebar-group-title">Antalya TUG Yerleskesi</div>
+            <div class="sidebar-item" data-slug="rtt150" onclick="loadTelescope('rtt150')">
+                <div class="sidebar-item-icon antalya">1.5m</div>
+                <div class="sidebar-item-info">
+                    <h4>RTT150</h4>
+                    <p>Rus-Turk Teleskobu</p>
+                </div>
+            </div>
+            <div class="sidebar-item" data-slug="tug100" onclick="loadTelescope('tug100')">
+                <div class="sidebar-item-icon antalya">1.0m</div>
+                <div class="sidebar-item-info">
+                    <h4>TUG100</h4>
+                    <p>Ritchey-Chretien</p>
+                </div>
+            </div>
+            <div class="sidebar-item" data-slug="tug060" onclick="loadTelescope('tug060')">
+                <div class="sidebar-item-icon antalya">0.6m</div>
+                <div class="sidebar-item-info">
+                    <h4>TUG060</h4>
+                    <p>Ritchey-Chretien</p>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content Area -->
+    <main class="content" id="content-area">
+        <div class="welcome-page" id="welcome">
+            <h2>Yakınskop</h2>
+            <p>Turkiye'nin ulusal teleskop altyapisini kesfetmek icin soldaki menuден bir teleskop secin.
+               Sectiginiz sayfadaki herhangi bir teknik terimi secip chatbot'a dogrudan sorabilirsiniz.</p>
+            <div class="welcome-cards">
+                <div class="welcome-card" onclick="loadTelescope('dag400')">
+                    <h4>DAG400</h4>
+                    <p>4.0 m — Turkiye'nin en buyuk teleskobu</p>
+                </div>
+                <div class="welcome-card" onclick="loadTelescope('rtt150')">
+                    <h4>RTT150</h4>
+                    <p>1.5 m — Rus-Turk Teleskobu</p>
+                </div>
+                <div class="welcome-card" onclick="loadTelescope('tug100')">
+                    <h4>TUG100</h4>
+                    <p>1.0 m — Otegezegen arastirmalari</p>
+                </div>
+                <div class="welcome-card" onclick="loadTelescope('ata050')">
+                    <h4>ATA050</h4>
+                    <p>0.5 m — Robotik gozlem</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Chat Panel -->
+    <aside class="chat-panel" id="chat-panel">
+        <div class="chat-header">
+            <h3>Yakinskop Asistan</h3>
+            <div class="chat-header-actions">
+                <button class="chat-header-btn" onclick="clearChat()" title="Sohbeti temizle">&#x1f5d1;</button>
+                <button class="chat-header-btn" onclick="toggleChatPanel()" title="Kapat">&times;</button>
+            </div>
+        </div>
+
+        <!-- Chat Tabs -->
+        <div class="chat-tabs">
+            <div class="chat-tab active" data-tab="chat" onclick="switchChatTab('chat')">Sohbet</div>
+            <div class="chat-tab" data-tab="compare" onclick="switchChatTab('compare')">Karsilastirma</div>
+            <div class="chat-tab" data-tab="explain" onclick="switchChatTab('explain')">Terim Aciklama</div>
+        </div>
+
+        <!-- Profil -->
+        <div class="chat-profile">
+            <label>Yas Grubu</label>
+            <select id="profile-age">
+                <option value="7-12">7-12</option>
+                <option value="13-18">13-18</option>
+                <option value="19-25" selected>19-25</option>
+                <option value="26+">26+</option>
+            </select>
+            <label>Egitim</label>
+            <select id="profile-edu">
+                <option>Ilkokul/Ortaokul</option>
+                <option>Lise</option>
+                <option selected>Universite Ogrencisi/Mezun</option>
+                <option>Egitimci/Arastirmaci</option>
+            </select>
+        </div>
+
+        <!-- Tab: Sohbet -->
+        <div id="tab-chat" class="chat-tab-content" style="display:flex; flex-direction:column; flex:1; overflow:hidden;">
+            <div class="chat-messages" id="chat-messages">
+                <div class="chat-msg system">Bir teleskop sayfasi acin ve soru sorun, ya da sayfadaki bir terimi secip chatbot'a gonderin.</div>
+            </div>
+            <div class="chat-input-area">
+                <textarea id="chat-input" placeholder="Teleskoplar hakkinda bir soru sorun..." rows="1"
+                          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
+                <button class="chat-send-btn" onclick="sendChat()" id="chat-send">&#9654;</button>
+            </div>
+        </div>
+
+        <!-- Tab: Karsilastirma -->
+        <div id="tab-compare" class="chat-tab-content" style="display:none; flex-direction:column; flex:1; overflow:hidden;">
+            <div class="compare-controls">
+                <label>Teleskop Sec (en az 2)</label>
+                <div class="checkbox-group" id="compare-checkboxes">
+                    <label><input type="checkbox" value="DAG400" checked> DAG400</label>
+                    <label><input type="checkbox" value="RTT150" checked> RTT150</label>
+                    <label><input type="checkbox" value="TUG100"> TUG100</label>
+                    <label><input type="checkbox" value="TUG060"> TUG060</label>
+                    <label><input type="checkbox" value="ATA050"> ATA050</label>
+                    <label><input type="checkbox" value="DAGTPS"> DAGTPS</label>
+                </div>
+                <label>Odak (opsiyonel)</label>
+                <input type="text" id="compare-focus" placeholder="Orn: ayna capi, CCD performansi...">
+                <button class="compare-btn" onclick="runCompare()" id="compare-btn">Karsilastir</button>
+            </div>
+            <div class="compare-result" id="compare-result">
+                <div class="chat-msg system">Karsilastirmak istediginiz teleskoplari secin.</div>
+            </div>
+        </div>
+
+        <!-- Tab: Terim Aciklama -->
+        <div id="tab-explain" class="chat-tab-content" style="display:none; flex-direction:column; flex:1; overflow:hidden;">
+            <div class="compare-controls">
+                <label>Teknik Terim</label>
+                <input type="text" id="explain-term" placeholder="Orn: Okuma Gurultusu, Strehl Orani, f/7.7...">
+                <label>Baglam Teleskobu</label>
+                <select id="explain-telescope">
+                    <option value="">Genel</option>
+                    <option value="DAG400">DAG400</option>
+                    <option value="RTT150">RTT150</option>
+                    <option value="TUG100">TUG100</option>
+                    <option value="TUG060">TUG060</option>
+                    <option value="ATA050">ATA050</option>
+                    <option value="DAGTPS">DAGTPS</option>
+                </select>
+                <button class="compare-btn" onclick="runExplain()" id="explain-btn">Acikla</button>
+            </div>
+            <div class="compare-result" id="explain-result">
+                <div class="chat-msg system">Sayfadaki bir terimi secip gonderin veya yukariya yazin.</div>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<!-- Text Selection Popup -->
+<div class="selection-popup" id="selection-popup" onclick="sendSelectionToChat()">
+    Chatbot'a Sor
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

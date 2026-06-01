@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:trgozlemevleri.gov.tr)"
+      "WebFetch(domain:trgozlemevleri.gov.tr)",
+      "Bash(python:*)",
+      "Bash(pip install:*)",
+      "Bash(curl -s http://localhost:5000/)",
+      "Bash(curl -s http://localhost:5000/api/telescope/dag400)",
+      "Bash(pkill -f \"python server.py\")"
     ]
   }
 }
