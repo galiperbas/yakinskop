@@ -1,6 +1,6 @@
 # Yakınskop: Türkiye Ulusal Gözlemevleri Teleskoplarını Yakından ve Daha Detaylı Tanıtan Chatbot Arayüzü
 
-**Yakınskop**, Türkiye Ulusal Gözlemevleri sitesinde bulunan altı adet teleskop sayfasında bulunan teknik verileri (https://trgozlemevleri.gov.tr/) toplumun her kesimine (7'den 77'ye) anlaşılır, kaliteli ve bilimsel doğruluktan ödün vermeden aktarmayı amaçlayan yapay zeka destekli bir interaktif sohbet (chatbot) arayüz (dashboard) projesidir.
+**Yakınskop**, Türkiye Ulusal Gözlemevleri sitesinde bulunan altı adet teleskop sayfasındaki teknik verileri (https://trgozlemevleri.gov.tr/) toplumun her kesimine (7'den 77'ye) anlaşılır, kaliteli ve bilimsel doğruluktan ödün vermeden aktarmayı amaçlayan yapay zeka destekli bir interaktif sohbet (chatbot) arayüz (dashboard) projesidir.
 
 Proje, teknik ve toplumun büyük bir bölümü için soyut olabilecek verileri (okuma gürültüleri, piksel ölçekleri, dalga cephesi hataları vb.) kullanıcının yaş ve eğitim gibi arka plan bilgisine göre dinamik olarak hikayeleştiren bir **Context-Injection RAG (Retrieval-Augmented Generation)** mimarisine sahiptir.
 
